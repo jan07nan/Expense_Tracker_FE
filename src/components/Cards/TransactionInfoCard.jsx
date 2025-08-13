@@ -13,49 +13,65 @@ const TransactionInfoCard = ({
   amount,
   type,
   hideDeleteBtn,
-   onDelete
+  onDelete,
 }) => {
   const getAmountStyles = () =>
-    type === "income" ? "bg-green-50 text-green-500" : "bg-red-50 text-red-500";
+    type === "income" ? "text-green-600" : "text-red-600";
 
   return (
-    <div className="group relative flex items-center gap-4 mt-2 p-3 rounded-lg hover:bg-gray-100/60">
-      <div className="w-12 h-12 flex items-center justify-center text-xl text-gray-800 bg-gray-100 rounded-full">
-        {icon ? (
-          <img src={icon} alt={title} className="w-6 h-6 " />
-        ) : (
-          <LuUtensils />
-        )}
-      </div>
-
-      <div className="flex-1 flex items-center justify-between">
-        <div>
-          <p className="text-sm text-gray-700 font-medium">{title}</p>
-          <p className="text-xs text-gray-400 mt-1">{date}</p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {!hideDeleteBtn && (
-            <button
-              className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-              onClick={onDelete}
-            >
-              {" "}
-              <LuTrash2 size={18} />{" "}
-            </button>
+    <tr className="group hover:bg-gray-50 transition-colors border-b border-gray-200">
+      {/* Icon Column */}
+      <td className="py-3 px-4">
+        <div className="w-10 h-10 flex items-center justify-center text-lg text-gray-600 bg-gray-100 rounded-full">
+          {icon ? (
+            <img src={icon} alt={title} className="w-5 h-5" />
+          ) : (
+            <LuUtensils />
           )}
-
-          <div
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-md ${getAmountStyles()}`}
-          >
-            <h6 className="text-xs font-medium">
-              {type === "income" ? "+" : "-"} ${amount}
-            </h6>
-            {type === "income" ? <LuTrendingUp /> : <LuTrendingDown />}
-          </div>
         </div>
-      </div>
-    </div>
+      </td>
+
+      {/* Category Column */}
+      <td className="py-3 px-4">
+        <p className="text-sm font-medium text-gray-900 truncate max-w-32">
+          {title}
+        </p>
+      </td>
+
+      {/* Date Column */}
+      <td className="py-3 px-4">
+        <p className="text-sm text-gray-600 whitespace-nowrap">{date}</p>
+      </td>
+
+      {/* Amount Column */}
+      <td className="py-3 px-4 text-right">
+        <div
+          className={`flex items-center justify-end gap-1 font-medium ${getAmountStyles()}`}
+        >
+          <span className="text-sm whitespace-nowrap">
+            {type === "income" ? "+" : "-"} ${amount}
+          </span>
+          {type === "income" ? (
+            <LuTrendingUp size={14} />
+          ) : (
+            <LuTrendingDown size={14} />
+          )}
+        </div>
+      </td>
+
+      {/* Actions Column */}
+      <td className="py-3 px-4 text-center">
+        {!hideDeleteBtn && (
+          <button
+            className="text-gray-400 hover:text-red-500 cursor-pointer p-1 rounded transition-colors"
+            onClick={onDelete}
+            title="Delete"
+          >
+            <LuTrash2 size={16} />
+          </button>
+        )}
+      </td>
+    </tr>
   );
 };
 

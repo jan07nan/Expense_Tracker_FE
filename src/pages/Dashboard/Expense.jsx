@@ -4,11 +4,11 @@ import DashboardLayout from "../../components/layouts/DashboardLayout";
 import toast from "react-hot-toast";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
-import ExpenseOverview from "../../components/Expense/ExpenseOverview";
 import AddExpenseForm from "../../components/Expense/AddExpenseForm";
 import Model from "../../components/Model";
 import ExpenseList from "../../components/Expense/ExpenseList";
 import DeleteAlert from "../../components/DeleteAlert";
+import { LuPlus } from "react-icons/lu";
 
 const Expense = () => {
   useUserAuth();
@@ -98,40 +98,6 @@ const Expense = () => {
     }
   };
 
-  //handle download Expense details
-  const handleDownloadExpenseDetails = async () => {
-    try {
-      const response = await axiosInstance.get(
-        API_PATHS.EXPENSE.DOWNLOAD_EXPENSE,
-        {
-          responseType: "blob",
-        }
-      );
-
-      // Check if response is successful
-      if (response.status !== 200) {
-        throw new Error("Download failed");
-      }
-
-      // Create a URL for the blob
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "expense_details.xlsx");
-      document.body.appendChild(link);
-      link.click();
-
-      // Clean up
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-
-      toast.success("Expense details downloaded successfully!");
-    } catch (error) {
-      console.error("Error downloading expense details:", error);
-      toast.error("Failed to download expense details");
-    }
-  };
-
   useEffect(() => {
     fetchExpenseDetails();
 
@@ -142,11 +108,22 @@ const Expense = () => {
     <DashboardLayout activeMenu="Expense">
       <div className="my-5 mx-auto">
         <div className="grid grid-cols-1 gap-6">
-          <div className="">
-            <ExpenseOverview
-              transactions={expenseData}
-              onExpenseIncome={() => setOpenAddExpenseModel(true)}
-            />
+          <div className="card">
+            <div className="flex items-center justify-between">
+              <div>
+                <h5 className="text-lg">Add Expense</h5>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Track your spending by adding new expenses to your account.
+                </p>
+              </div>
+              <button
+                className="add-btn"
+                onClick={() => setOpenAddExpenseModel(true)}
+              >
+                <LuPlus className="text-lg" />
+                Add Expense
+              </button>
+            </div>
           </div>
 
           <ExpenseList
@@ -154,7 +131,6 @@ const Expense = () => {
             onDelete={(id) => {
               setOpenDeleteAlert({ show: true, data: id });
             }}
-            onDownlod={handleDownloadExpenseDetails}
           />
         </div>
 
